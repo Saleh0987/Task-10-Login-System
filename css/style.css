@@ -11,9 +11,12 @@
  padding: 0;
  box-sizing: border-box;
 }
+
 ::-webkit-scrollbar {
  display: none;
 }
+
+
 body {
  background: #f6f5f7;
  font-family: "Nunito", sans-serif;
@@ -31,7 +34,7 @@ h1 {
 }
 
 p {
- font-size: 14px;
+ font-size: 16px;
  font-weight: 100;
  line-height: 20px;
  letter-spacing: 0.5px;
@@ -48,13 +51,14 @@ p {
  display: inline-flex;
  justify-content: center;
  align-items: center;
+ text-align: center;
  margin: 0 5px;
  height: 40px;
  width: 40px;
 }
 
 span {
- font-size: 12px;
+ font-size: 14px;
 }
 
 a {
@@ -330,3 +334,15 @@ input {
  }
 }
 
+  .password-toggle {
+   position: relative;
+   width: 100%;
+  }
+ 
+  .password-toggle .toggle-password {
+   position: absolute;
+   top: 50%;
+   right: 0.75rem;
+   transform: translateY(-50%);
+   cursor: pointer;
+  }

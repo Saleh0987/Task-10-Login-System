@@ -9,47 +9,49 @@ function getUsersFromStorage() {
 function saveUsersToStorage(users) {
     localStorage.setItem('users', JSON.stringify(users));
 }
+
 // Alert messages (customize as needed)
-const messagesAlert = {
-  msgErrorObj: {
-    title: "Oops...",
-    text: "Please fill in all fields.",
-    timer: 1000,
-  },
-  msgEmailUsed: {
-    title: "Invalid email or email already in use",
-    timer: 1000,
-  },
-  msgInvalidName: {
-    title: "Invalid name",
-    text: "Please enter a valid name.",
-    timer: 1000,
-  },
-  msgInvalidPassword: {
-    title: "Invalid password",
-    text: "Password must contain at least 8 characters with one uppercase letter, one lowercase letter, and one digit.",
-    timer: 1000,
+let messagesAlert = {
+    msgErrorObj: {
+        title: "Oops...",
+        text: "Please fill in all fields.",
+        timer: 1000,
     },
-     msgSusses: {
-        title: "SignUp successfull",
+    msgEmailUsed: {
+        title: "Invalid email or email already in use",
+        timer: 1000,
+    },
+    msgInvalidName: {
+        title: "Invalid name",
+        text: "Please enter a valid name.",
+        timer: 1000,
+    },
+    msgInvalidPassword: {
+        title: "Invalid password",
+        text: "Password must contain at least 8 characters with one uppercase letter, one lowercase letter, and one digit.",
+        timer: 1000,
+        },
+        msgSusses: {
+            title: "SignUp successfull",
+            text: "Please Wait ....",
         timer: 2000
     },
-    msgSussesLog: {
+        msgSussesLog: {
         title: "Login successfull",
         timer: 3000
     },
-       msgError: {
+        msgError: {
         title: "Oops...",
         text: "Please fix the errors in the form.",
         timer: 1000
     },
-     msgErrorLog: {
+        msgErrorLog: {
         title: "Oops...",
         text: "Invalid email or password.",
         timer: 1000
     },
     msgLogOut: {
-    title: "LogOut successfull!",
+    title: "LogOut Successfull!",
     timer: 1500
 }
 };
@@ -64,13 +66,13 @@ document.addEventListener('DOMContentLoaded', function() {
             let emailInput = document.getElementById('email');
             let passwordInput = document.getElementById('password');
 
-            let name = nameInput.value.trim();
+            let name = nameInput.value;
             let email = emailInput.value.trim();
             let password = passwordInput.value.trim();
 
             // Validate name
-            let nameValid = /^[0-9A-Za-z]{6,16}$/.test(name);
-            if (nameValid) {
+            let nameValid = /^[a-zA-Z\s]+$/.test(name);
+            if (nameValid && name.length > 6) {
                 nameInput.style.borderColor = 'green';
             } else {
                 nameInput.style.borderColor = 'red';
@@ -100,9 +102,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 let users = getUsersFromStorage();
 
                 // Check if email is already registered
-                if (users.find(user => user.email === email)) {
+                    if (users.find(user => user.email.toLowerCase() === email.toLowerCase())) {
                     emailInput.style.borderColor = 'red';
-                    Swal.fire(messagesAlert.msgEmailUsed)
+                        Swal.fire(messagesAlert.msgEmailUsed);
                 } else {
                     // Register user
                     users.push({ name, email, password });
@@ -144,8 +146,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
- let user = JSON.parse(localStorage.getItem('user'));
-if (user) {
+    let user = JSON.parse(localStorage.getItem('user'));
+    if (user) {
     let usernameSpan = document.getElementById('username');
     if (usernameSpan) {
         usernameSpan.textContent = user.name;
@@ -154,20 +156,33 @@ if (user) {
     let logoutButton = document.getElementById('logoutButton');
     if (logoutButton) {
         logoutButton.addEventListener('click', function () {
-            // Clear user session
-            localStorage.removeItem('user');
-                Swal.fire(messagesAlert.msgLogOut);
+            // Show confirmation message
+            Swal.fire({
+                title: 'Are you sure you want to log out?',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, log out'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Clear user session
+                    localStorage.removeItem('user');
+                    
+                    // Show success message
+                    Swal.fire({
+                        title: 'Logged Out',
+                        text: 'You have been logged out successfully',
+                        timer: 2000,
+                        timerProgressBar: true,
+                        showConfirmButton: false
+                    });
 
-            setTimeout(() => {
+                    setTimeout(() => {
                         window.location.href = 'index.html';
-            }, 2000);
+                    }, 2000);
+                }
+            });
         });
     }
-} else {
-    if (window.location.pathname.endsWith('home.html')) {
-        // Redirect to login if not logged in
-        window.location.href = 'index.html';
     }
-}
-
 });
